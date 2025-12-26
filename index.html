@@ -1,0 +1,1675 @@
+<!doctype html>
+<html lang="id" class="h-full">
+ <head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
+  <title>Dongeng Pengantar Tidur</title><!-- PWA Meta Tags -->
+  <meta name="theme-color" content="#0f172a">
+  <meta name="description" content="Kumpulan dongeng pengantar tidur untuk anak-anak">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="Dongeng Tidur"><!-- PWA Icons -->
+  <link rel="apple-touch-icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect fill='%230f172a' width='100' height='100'/><text y='70' font-size='50' text-anchor='middle' x='50'>📚🌙</text></svg>">
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect fill='%23ec4899' width='100' height='100' rx='20'/><text y='75' font-size='60' text-anchor='middle' x='50'>📚</text></svg>">
+  <link rel="shortcut icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect fill='%23ec4899' width='100' height='100' rx='20'/><text y='75' font-size='60' text-anchor='middle' x='50'>📚</text></svg>">
+  <script src="/_sdk/element_sdk.js"></script>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+        body {
+            box-sizing: border-box;
+        }
+        
+        * {
+            box-sizing: border-box;
+        }
+        
+        /* Responsive breakpoints */
+        @media (max-width: 640px) {
+            .mobile-optimized {
+                padding: 20px 15px !important;
+            }
+            
+            .mobile-grid {
+                grid-template-columns: 1fr !important;
+            }
+            
+            .mobile-text {
+                font-size: 14px !important;
+            }
+        }
+        
+        @media (min-width: 641px) and (max-width: 1024px) {
+            .tablet-grid {
+                grid-template-columns: repeat(2, 1fr) !important;
+            }
+        }
+        
+        @media (min-width: 1025px) {
+            .desktop-grid {
+                grid-template-columns: repeat(3, 1fr) !important;
+            }
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes starTwinkle {
+            0%, 100% { opacity: 0.3; }
+            50% { opacity: 1; }
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+
+        @keyframes heartbeat {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        @keyframes photoPulse {
+            0%, 100% { transform: scale(1); box-shadow: 0 10px 30px rgba(236, 72, 153, 0.4); }
+            50% { transform: scale(1.05); box-shadow: 0 15px 40px rgba(236, 72, 153, 0.6); }
+        }
+
+        .loading-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #0f172a 100%);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            z-index: 10000;
+            transition: opacity 0.5s ease-out;
+        }
+
+        .loading-screen.fade-out {
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .loading-spinner {
+            position: relative;
+            width: 180px;
+            height: 180px;
+        }
+
+        .spinner-ring {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            border: 4px solid transparent;
+            border-top-color: #ec4899;
+            border-right-color: #ec4899;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        .spinner-ring:nth-child(2) {
+            width: 140px;
+            height: 140px;
+            top: 20px;
+            left: 20px;
+            border-top-color: #fbbf24;
+            border-right-color: #fbbf24;
+            animation-duration: 1.5s;
+            animation-direction: reverse;
+        }
+
+        .loading-photo-container {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .loading-photo {
+            position: relative;
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            overflow: hidden;
+            border: 3px solid #ec4899;
+            animation: photoPulse 2s ease-in-out infinite;
+        }
+
+        .loading-photo:first-child {
+            margin-right: -15px;
+            z-index: 2;
+        }
+
+        .loading-photo:last-child {
+            z-index: 1;
+        }
+
+        .loading-photo img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .loading-text {
+            margin-top: 30px;
+            font-size: 24px;
+            color: #ec4899;
+            font-weight: bold;
+            text-align: center;
+            animation: pulse 1.5s ease-in-out infinite;
+        }
+
+        .loading-subtext {
+            margin-top: 10px;
+            font-size: 16px;
+            color: #f1f5f9;
+            opacity: 0.7;
+            text-align: center;
+        }
+
+        .story-card {
+            animation: fadeIn 0.5s ease-out;
+            transition: all 0.3s ease;
+        }
+
+        .story-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+        }
+
+        .star {
+            animation: starTwinkle 2s infinite;
+        }
+
+        .moon {
+            animation: float 6s ease-in-out infinite;
+        }
+        
+        .heart-icon {
+            animation: heartbeat 2s ease-in-out infinite;
+        }
+
+        .category-btn {
+            transition: all 0.3s ease;
+        }
+
+        .category-btn:hover {
+            transform: scale(1.05);
+        }
+
+        .category-btn.active {
+            transform: scale(1.1);
+        }
+
+        .modal-overlay {
+            backdrop-filter: blur(8px);
+            animation: fadeIn 0.3s ease-out;
+        }
+
+        .modal-content {
+            animation: fadeIn 0.4s ease-out;
+            max-height: 85%;
+            overflow-y: auto;
+        }
+
+        .story-content {
+            line-height: 1.8;
+        }
+
+        .close-btn {
+            transition: all 0.2s ease;
+        }
+
+        .close-btn:hover {
+            transform: rotate(90deg);
+        }
+
+        /* Custom scrollbar */
+        .modal-content::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        .modal-content::-webkit-scrollbar-track {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+        }
+
+        .modal-content::-webkit-scrollbar-thumb {
+            background: rgba(255, 255, 255, 0.3);
+            border-radius: 10px;
+        }
+
+        .modal-content::-webkit-scrollbar-thumb:hover {
+            background: rgba(255, 255, 255, 0.5);
+        }
+    </style>
+  <style>@view-transition { navigation: auto; }</style>
+  <script src="/_sdk/data_sdk.js" type="text/javascript"></script>
+ </head>
+ <body class="h-full"><!-- Loading Screen -->
+  <div id="loadingScreen" class="loading-screen">
+   <div class="loading-spinner">
+    <div class="spinner-ring"></div>
+    <div class="spinner-ring"></div>
+    <div class="loading-photo-container">
+     <div class="loading-photo"><img src="https://iili.io/fMEOjqb.jpg" alt="Rifki">
+     </div>
+     <div class="loading-photo"><img src="https://iili.io/fMEeqT7.jpg" alt="Rara">
+     </div>
+    </div>
+   </div>
+   <div class="loading-text">
+    Dongeng Pengantar Tidur 📚
+   </div>
+   <div class="loading-subtext">
+    Memuat cerita yang menyenangkan... 🌙
+   </div>
+  </div>
+  <div id="app" class="w-full h-full overflow-auto"></div>
+  <script>
+        const defaultConfig = {
+            background_color: "#0f172a",
+            card_color: "#1e293b",
+            accent_color: "#fbbf24",
+            text_color: "#f1f5f9",
+            button_color: "#ec4899",
+            font_family: "Georgia",
+            font_size: 16,
+            app_title: "Dongeng Pengantar Tidur",
+            app_subtitle: "Kumpulan cerita menarik untuk tidur nyenyak",
+            category_all: "Semua",
+            category_animals: "Hewan",
+            category_fairy: "Peri & Sihir",
+            category_adventure: "Petualangan"
+        };
+
+        const stories = [
+            {
+                id: 1,
+                title: "Kelinci dan Kura-kura",
+                category: "animals",
+                duration: "5 menit",
+                emoji: "🐰",
+                preview: "Seekor kelinci yang sombong menantang kura-kura untuk balapan...",
+                content: `Dahulu kala, di sebuah hutan yang indah, hiduplah seekor kelinci yang sangat sombong. Ia selalu membanggakan kecepatannya kepada hewan-hewan lain.
+
+Suatu hari, kelinci tersebut mengejek kura-kura yang bergerak lambat. "Kura-kura, kamu sangat lambat! Aku bisa berlari sepuluh kali lebih cepat darimu!" kata kelinci dengan sombong.
+
+Kura-kura yang bijaksana hanya tersenyum dan berkata, "Kelinci, bagaimana kalau kita lomba lari? Kita lihat siapa yang akan menang."
+
+Kelinci tertawa terbahak-bahak. "Baiklah! Ini akan mudah bagiku!" Mereka pun sepakat untuk lomba keesokan harinya.
+
+Ketika lomba dimulai, kelinci berlari sangat cepat dan meninggalkan kura-kura jauh di belakang. Merasa sangat yakin akan menang, kelinci memutuskan untuk beristirahat di bawah pohon.
+
+"Ah, aku punya banyak waktu. Aku akan tidur sebentar," pikir kelinci. Tak lama kemudian, ia tertidur pulas.
+
+Sementara itu, kura-kura terus berjalan perlahan tapi pasti. Ia tidak berhenti atau menyerah. Langkah demi langkah, ia terus maju menuju garis finish.
+
+Ketika kelinci terbangun, matahari sudah hampir terbenam. Ia terkejut dan langsung berlari secepat mungkin. Namun ketika ia tiba di garis finish, kura-kura sudah menunggu di sana dengan senyuman.
+
+"Selamat datang, kelinci! Kamu memang cepat, tapi aku tidak pernah berhenti," kata kura-kura dengan lembut.
+
+Kelinci merasa malu dengan kesombongannya. Ia belajar bahwa ketekunan dan tidak menyerah lebih penting daripada hanya mengandalkan bakat.
+
+Sejak hari itu, kelinci menjadi lebih rendah hati dan menjadi teman baik kura-kura.
+
+**Pesan Moral:** Lambat tapi pasti akan mengalahkan cepat tapi lalai. Ketekunan adalah kunci kesuksesan.`
+            },
+            {
+                id: 2,
+                title: "Putri dan Peri Bulan",
+                category: "fairy",
+                duration: "7 menit",
+                emoji: "👸",
+                preview: "Seorang putri kecil bertemu dengan peri ajaib yang tinggal di bulan...",
+                content: `Di sebuah kerajaan yang damai, hiduplah seorang putri kecil bernama Luna. Setiap malam, ia selalu menatap bulan dari jendela kamarnya dan bermimpi bisa terbang ke sana.
+
+Suatu malam purnama, ketika Luna sedang menatap bulan, tiba-tiba cahaya terang menerangi kamarnya. Muncullah seorang peri cantik dengan sayap berkilauan seperti perak.
+
+"Selamat malam, Luna. Aku adalah Peri Bulan," kata peri tersebut dengan suara merdu. "Aku telah melihatmu setiap malam menatap bulan dengan mata penuh harapan."
+
+Luna sangat terkejut tapi juga senang. "Benarkah? Aku selalu ingin sekali mengunjungi bulan!" serunya dengan mata berbinar.
+
+Peri Bulan tersenyum. "Hari ini adalah malam yang istimewa. Aku akan membawamu ke bulan, tapi hanya untuk beberapa jam. Apakah kamu siap?"
+
+Luna mengangguk dengan antusias. Peri Bulan mengulurkan tangannya, dan dalam sekejap mata, mereka terbang melintasi langit malam yang dipenuhi bintang-bintang.
+
+Ketika tiba di bulan, Luna takjub melihat keindahan yang ada. Bulan ternyata dipenuhi taman bunga perak yang berkilauan, danau kristal yang memantulkan cahaya bintang, dan istana yang terbuat dari cahaya bulan.
+
+"Ini sangat indah!" seru Luna. "Tapi kenapa kamu hidup sendirian di sini?"
+
+Peri Bulan menjelaskan, "Aku bertugas menjaga cahaya bulan agar selalu menerangi bumi. Setiap malam, aku menyalakan cahaya untuk membimbing mereka yang tersesat dan memberikan harapan bagi yang bermimpi."
+
+Luna belajar tentang tanggung jawab dan pengorbanan dari Peri Bulan. Meskipun sendirian, Peri Bulan bahagia karena bisa membantu orang lain.
+
+Ketika waktu pulang tiba, Peri Bulan memberikan Luna sebuah kalung dengan liontin bulan kecil. "Setiap kali kamu melihat bulan, ingatlah bahwa mimpi-mimpi indah memerlukan kerja keras dan dedikasi."
+
+Luna kembali ke kamarnya dengan hati penuh kebahagiaan dan pelajaran berharga. Sejak malam itu, ia tidak hanya memimpikan hal-hal indah, tapi juga bekerja keras untuk mewujudkannya.
+
+**Pesan Moral:** Mimpi yang indah memerlukan usaha dan dedikasi untuk mewujudkannya. Kebahagiaan sejati datang dari membantu orang lain.`
+            },
+            {
+                id: 3,
+                title: "Petualangan Beruang Kecil",
+                category: "adventure",
+                duration: "6 menit",
+                emoji: "🐻",
+                preview: "Seekor beruang kecil yang penasaran memulai petualangan seru di hutan...",
+                content: `Di sebuah hutan lebat, hiduplah seekor beruang kecil bernama Bruno yang sangat penasaran. Suatu pagi, ia memutuskan untuk menjelajahi bagian hutan yang belum pernah ia kunjungi.
+
+"Ibu, aku ingin menjelajah hutan!" kata Bruno dengan semangat.
+
+Ibu Beruang menasihati, "Hati-hati, Bruno. Jangan pergi terlalu jauh dan selalu ingat jalan pulang."
+
+Bruno berjanji akan hati-hati. Ia mulai berjalan melewati pepohonan tinggi, melintasi sungai kecil, dan menemukan berbagai hal menarik di sepanjang jalan.
+
+Di tengah perjalanan, Bruno bertemu dengan seekor tupai tua yang bijaksana. "Halo, Beruang Kecil! Kemana kamu pergi?" tanya tupai.
+
+"Aku sedang berpetualang! Aku ingin melihat apa yang ada di luar sana," jawab Bruno dengan antusias.
+
+Tupai tersenyum, "Petualangan itu baik, tapi ingatlah untuk selalu membuat penanda agar kamu bisa pulang. Lihat, aku akan mengajarimu cara membuat jejak."
+
+Bruno belajar membuat tanda di pohon-pohon dengan cakarnya. Ia juga belajar mengingat bentuk batu dan aliran sungai.
+
+Setelah berjam-jam menjelajah, Bruno menemukan sebuah padang bunga yang indah. Kupu-kupu berwarna-warni beterbangan, dan madu lebah yang lezat ada di mana-mana.
+
+Tapi kemudian, langit mulai gelap. Bruno menyadari sudah waktunya pulang. Ia mulai khawatir. "Apakah aku masih ingat jalan pulang?" pikirnya.
+
+Dengan tenang, Bruno mengingat pelajaran dari tupai tua. Ia mengikuti tanda-tanda yang ia buat, mengikuti aliran sungai yang sama, dan mengenali pohon-pohon besar yang ia lewati.
+
+Ketika malam tiba, Bruno akhirnya sampai di rumah. Ibu Beruang sangat senang melihatnya pulang dengan selamat.
+
+"Bagaimana petualanganmu, Bruno?" tanya Ibu.
+
+"Luar biasa, Ibu! Dan aku belajar bahwa berpetualang itu menyenangkan, tapi yang terpenting adalah tahu cara pulang ke rumah," jawab Bruno dengan bijak.
+
+Malam itu, Bruno tidur dengan nyenyak, bermimpi tentang petualangan berikutnya, tapi kali ini dengan lebih siap dan bijaksana.
+
+**Pesan Moral:** Petualangan itu menyenangkan, tapi selalu ingat jalan pulang. Persiapan dan kehati-hatian penting dalam setiap perjalanan.`
+            },
+            {
+                id: 4,
+                title: "Burung Hantu yang Bijaksana",
+                category: "animals",
+                duration: "5 menit",
+                emoji: "🦉",
+                preview: "Seekor burung hantu tua mengajarkan kebijaksanaan kepada hewan-hewan muda...",
+                content: `Di puncak pohon oak tertua di hutan, tinggallah seekor burung hantu bernama Profesor Hoot. Ia dikenal sebagai hewan paling bijaksana di seluruh hutan.
+
+Setiap malam, hewan-hewan muda datang kepadanya untuk meminta nasihat. Suatu malam, datanglah sekelompok hewan muda yang sedang bertengkar.
+
+"Profesor Hoot, tolong bantu kami!" seru seekor rubah muda. "Kami semua ingin menjadi pemimpin kelompok, tapi kami tidak bisa sepakat siapa yang paling pantas."
+
+Burung hantu tua itu menatap mereka dengan mata besarnya yang bijaksana. "Hmm, ceritakan padaku, apa yang membuat seseorang menjadi pemimpin yang baik?"
+
+Rubah berkata, "Pemimpin harus cerdik dan cepat!"
+
+Rusa muda menyela, "Tidak! Pemimpin harus kuat dan berani!"
+
+Berang-berang kecil menambahkan, "Pemimpin harus rajin bekerja!"
+
+Profesor Hoot mengangguk perlahan. "Kalian semua benar. Tapi ada satu hal yang kalian lupakan."
+
+Semua hewan muda menatap dengan penasaran.
+
+"Pemimpin sejati adalah yang mendengarkan," kata Profesor Hoot. "Perhatikan, sejak tadi kalian datang, kalian semua berbicara tapi tidak ada yang mendengarkan satu sama lain."
+
+Hewan-hewan muda terdiam, menyadari kebenarannya.
+
+"Seorang pemimpin yang baik harus mendengarkan semua suara, memahami berbagai sudut pandang, dan membuat keputusan yang baik untuk semua, bukan hanya untuk dirinya sendiri," lanjut burung hantu bijaksana.
+
+Kemudian Profesor Hoot memberikan mereka sebuah tantangan. "Selama seminggu, kalian harus bekerja sama dalam kelompok tanpa ada pemimpin. Bantu satu sama lain, dengarkan satu sama lain, dan lihat apa yang terjadi."
+
+Hewan-hewan muda setuju. Selama seminggu, mereka belajar bekerja sama, mendengarkan ide satu sama lain, dan saling membantu.
+
+Pada akhir minggu, mereka kembali ke Profesor Hoot dengan senyuman.
+
+"Kami sudah tidak perlu pemimpin tunggal!" kata mereka dengan gembira. "Ketika kami semua mendengarkan dan bekerja sama, kami semua menjadi pemimpin dengan caranya masing-masing!"
+
+Profesor Hoot tersenyum lebar. "Itulah kebijaksanaan sejati. Kepemimpinan bukan tentang berkuasa, tapi tentang memberdayakan orang lain."
+
+Sejak malam itu, kelompok hewan muda tersebut menjadi contoh kerjasama terbaik di hutan.
+
+Suatu hari, seekor rubah muda bertanya pada Roxy, "Bagaimana cara mendapatkan makanan dengan mudah?"
+
+Roxy tersenyum dan menjawab, "Bukan dengan menipu. Gunakan kepintaranmu untuk membantu orang lain, dan mereka akan membantumu juga. Itulah cara terbaik."
+
+**Pesan Moral:** Pemimpin sejati adalah pendengar yang baik. Kerjasama dan saling menghargai lebih penting daripada kekuasaan.`
+            },
+            {
+                id: 5,
+                title: "Bintang yang Jatuh",
+                category: "fairy",
+                duration: "6 menit",
+                emoji: "⭐",
+                preview: "Sebuah bintang kecil jatuh ke bumi dan belajar arti kebahagiaan...",
+                content: `Tinggi di langit malam, di antara jutaan bintang yang berkilauan, hiduplah sebuah bintang kecil bernama Stella. Stella selalu bertanya-tanya bagaimana rasanya hidup di bumi.
+
+Suatu malam, Stella merasa sangat ingin tahu sehingga ia memutuskan untuk jatuh dari langit. Dengan berani, ia melepaskan diri dari tempatnya dan mulai jatuh menuju bumi.
+
+Cahayanya yang terang menerangi langit malam, dan semua orang di bumi melihatnya dan berseru, "Lihat! Bintang jatuh! Cepat buat permohonan!"
+
+Stella mendarat dengan lembut di sebuah taman yang indah. Untuk pertama kalinya, ia melihat bunga-bunga, merasakan rumput, dan mendengar suara jangkrik malam.
+
+"Wah, bumi sangat berbeda!" pikir Stella. Ia mulai berjalan-jalan dan bertemu dengan seekor kunang-kunang.
+
+"Halo! Aku Stella, bintang yang jatuh dari langit," sapanya.
+
+Kunang-kunang terkejut. "Bintang? Tapi kamu sangat kecil sekarang. Cahayamu hampir tidak terlihat!"
+
+Stella sedih mendengarnya. Ia menyadari bahwa di bumi, cahayanya tidak sekuat di langit. Ia merasa kehilangan keistimewaannya.
+
+Berjalan lebih jauh, Stella bertemu dengan seorang anak kecil yang sedang menangis.
+
+"Kenapa kamu menangis?" tanya Stella dengan lembut.
+
+"Aku tersesat dan takut dengan kegelapan," jawab anak itu.
+
+Stella kemudian mendekat dan bersinar sekuat yang ia bisa. Meskipun cahayanya kecil, itu cukup untuk menerangi jalan anak tersebut dan menghilangkan rasa takutnya.
+
+"Terima kasih, cahaya kecil! Kamu telah menolongku!" kata anak itu sambil tersenyum.
+
+Stella menyadari sesuatu yang penting. "Di langit, aku hanya satu dari jutaan bintang. Tapi di sini, cahaya kecilku bisa membuat perbedaan besar bagi seseorang."
+
+Ia terus membantu orang-orang di malam hari - menerangi jalan bagi yang tersesat, memberikan harapan bagi yang sedih, dan membuat anak-anak tersenyum.
+
+Ketika fajar menjelang, Peri Bintang muncul dan berkata, "Stella, kamu telah belajar pelajaran penting. Ukuran tidak menentukan nilai. Yang penting adalah bagaimana kita menggunakan apa yang kita miliki untuk membantu orang lain."
+
+Peri Bintang kemudian memberikan Stella pilihan: kembali ke langit atau tetap di bumi.
+
+Stella tersenyum, "Aku ingin melakukan keduanya. Aku akan bersinar di langit untuk membimbing para pelancong, dan kadang-kadang turun untuk membantu mereka yang membutuhkan."
+
+Dan sejak itu, Stella menjadi bintang yang paling istimewa - yang tidak hanya bersinar dari jauh, tapi juga menyentuh kehidupan secara langsung.
+
+**Pesan Moral:** Ukuran tidak menentukan nilai. Bahkan hal terkecil pun bisa membuat perbedaan besar jika digunakan dengan tulus untuk membantu orang lain.`
+            },
+            {
+                id: 6,
+                title: "Petualangan di Hutan Ajaib",
+                category: "adventure",
+                duration: "8 menit",
+                emoji: "🌲",
+                preview: "Tiga sahabat menemukan pintu ajaib yang menuju ke hutan penuh keajaiban...",
+                content: `Di sebuah desa kecil, tinggallah tiga sahabat: Andi, Budi, dan Citra. Mereka suka bermain di hutan dekat desa mereka.
+
+Suatu hari, mereka menemukan sebuah pohon besar dengan pintu kayu kecil di batangnya. "Ayo kita lihat apa yang ada di dalamnya!" ajak Andi.
+
+Ketika mereka membuka pintu tersebut, tiba-tiba mereka tersedot masuk ke dalam cahaya terang. Mereka melayang sebentar, lalu mendarat dengan lembut di sebuah hutan yang sangat berbeda.
+
+"Di mana kita?" tanya Citra dengan takjub.
+
+Hutan ini sangat ajaib! Pohon-pohonnya berkilauan dengan cahaya warna-warni, bunga-bunga berbicara, dan kupu-kupu sebesar burung beterbangan di sekitar mereka.
+
+Tiba-tiba muncullah seekor kelinci putih besar dengan jas merah. "Selamat datang di Hutan Ajaib! Aku adalah Raja Kelinci. Kalian terpilih untuk membantu kami!"
+
+"Membantu? Untuk apa?" tanya Budi.
+
+"Hutan kami kehilangan Kristal Harmoni yang membuat semua makhluk bisa hidup berdampingan dengan damai. Tanpa kristal itu, hutan akan kehilangan keajaibannya," jelas Raja Kelinci.
+
+Ketiga sahabat setuju untuk membantu. Raja Kelinci memberikan mereka peta dan tiga petunjuk:
+
+"Pertama, kalian harus melewati Sungai Pertanyaan. Kalian hanya bisa menyeberang jika menjawab pertanyaan dengan jujur."
+
+Mereka tiba di sungai yang airnya berkilauan. Sebuah suara bergema, "Apa yang lebih penting: menjadi pintar atau menjadi baik?"
+
+Andi berpikir sejenak, "Menjadi baik, karena kepintaran tanpa kebaikan bisa menyakiti orang lain."
+
+Jembatan pelangi muncul dan mereka bisa menyeberang!
+
+"Kedua, kalian harus melewati Gua Keberanian. Di sana kalian akan menghadapi ketakutan kalian sendiri."
+
+Di dalam gua yang gelap, masing-masing dari mereka melihat bayangan hal-hal yang mereka takuti. Tapi dengan saling berpegangan tangan dan saling menyemangati, mereka berhasil melewatinya.
+
+"Ketiga, kalian harus memecahkan Teka-teki Pohon Bijaksana."
+
+Di sebuah pelataran, berdiri pohon tertua di hutan. Pohon itu bertanya, "Apa yang semakin banyak ketika dibagikan?"
+
+Citra tersenyum, "Kebahagiaan! Semakin kita berbagi kebahagiaan, semakin banyak kebahagiaan yang ada."
+
+Pohon itu membuka cabangnya dan menampakkan Kristal Harmoni yang bersinar indah!
+
+Ketika mereka mengembalikan kristal ke tempatnya, seluruh hutan bersinar lebih terang dari sebelumnya. Semua makhluk ajaib berkumpul untuk berterima kasih.
+
+Raja Kelinci berkata, "Kalian telah menunjukkan kejujuran, keberanian, dan kebijaksanaan. Kalian adalah pahlawan sejati!"
+
+Sebelum pulang, setiap sahabat menerima hadiah: Andi mendapat kompas yang menunjuk ke arah yang benar, Budi mendapat tongkat keberanian, dan Citra mendapat buku kebijaksanaan.
+
+Mereka kembali melalui pintu ajaib dan menemukan diri mereka kembali di hutan dekat desa. Petualangan mereka terasa seperti mimpi, tapi hadiah di tangan mereka membuktikan semuanya nyata.
+
+Sejak hari itu, ketiga sahabat menggunakan pelajaran dari Hutan Ajaib untuk membantu orang-orang di desa mereka, membuktikan bahwa keajaiban sejati ada dalam perbuatan baik kita.
+
+**Pesan Moral:** Kejujuran, keberanian, dan kebijaksanaan adalah kunci untuk mengatasi semua tantangan. Persahabatan sejati membuat kita lebih kuat.`
+            },
+            {
+                id: 7,
+                title: "Kucing dan Tikus Kecil",
+                category: "animals",
+                duration: "5 menit",
+                emoji: "🐱",
+                preview: "Persahabatan tak terduga antara kucing dan tikus mengajarkan tentang kebaikan...",
+                content: `Di sebuah rumah tua, tinggallah seekor kucing besar bernama Max. Max dikenal sebagai kucing yang sangat baik dalam menangkap tikus.
+
+Suatu hari, Max menangkap seekor tikus kecil bernama Pip. Tikus kecil itu gemetar ketakutan.
+
+"Tolong jangan makan aku!" mohon Pip dengan suara kecil. "Aku punya keluarga yang menungguku di rumah."
+
+Max terdiam. Ia tidak pernah berpikir bahwa tikus juga punya keluarga dan perasaan. "Baiklah, aku akan melepaskanmu. Tapi jangan kembali lagi ke rumah ini!"
+
+Pip sangat berterima kasih. "Terima kasih, Max! Suatu hari nanti, aku akan membalas kebaikanmu!"
+
+Max hanya tertawa kecil. "Kamu? Tikus kecil sepertimu? Apa yang bisa kamu lakukan untuk membantuku?" Tapi ia tetap melepaskan Pip.
+
+Beberapa minggu kemudian, pemilik rumah membawa kucing baru yang lebih muda untuk menggantikan Max. Max yang sudah tua diusir dari rumah.
+
+Max berkeliaran di jalanan dengan lapar dan kedinginan. Suatu malam, ia terjebak di dalam kotak kardus yang terbalik dan tidak bisa keluar.
+
+Max mencoba berteriak minta tolong, tapi tidak ada yang mendengar. Ia mulai kehilangan harapan.
+
+Tiba-tiba, ia mendengar suara kecil. "Max? Apakah itu kamu?"
+
+Itu adalah Pip! Tikus kecil itu mengenali suara Max.
+
+"Pip! Aku terjebak di sini!" teriak Max.
+
+Tanpa ragu, Pip memanggil semua teman-teman tikusnya. Bersama-sama, mereka menggerogoti tali yang mengikat kotak kardus. Setelah bekerja keras, mereka berhasil membebaskan Max.
+
+Max sangat terharu. "Pip, kamu benar-benar menepati janjimu. Maafkan aku karena pernah meremehkanmu."
+
+Pip tersenyum, "Kita mungkin berbeda, Max, tapi kebaikan tidak mengenal ukuran. Kamu pernah baik padaku, sekarang giliranku membalas kebaikanmu."
+
+Sejak hari itu, Max dan Pip menjadi sahabat yang tidak biasa. Max belajar bahwa teman bisa datang dari tempat yang paling tidak terduga, dan Pip menunjukkan bahwa bahkan makhluk terkecil pun bisa membuat perbedaan besar.
+
+Mereka tinggal bersama di sebuah lumbung tua, di mana Max melindungi Pip dan keluarganya dari bahaya, sementara Pip dan teman-temannya membantu Max mencari makanan.
+
+Hewan-hewan lain di sekitar lumbung terkagum-kagum melihat persahabatan yang tidak biasa ini. Dan mereka semua belajar bahwa kebaikan dan persahabatan lebih kuat daripada perbedaan apapun.
+
+**Pesan Moral:** Kebaikan tidak akan pernah sia-sia. Teman bisa datang dari tempat yang paling tidak terduga. Jangan pernah meremehkan orang lain karena ukuran atau perbedaan mereka.`
+            },
+            {
+                id: 8,
+                title: "Peri Taman dan Bunga Sakura",
+                category: "fairy",
+                duration: "7 menit",
+                emoji: "🌸",
+                preview: "Peri taman mengajarkan tentang keindahan perubahan musim dan siklus kehidupan...",
+                content: `Di sebuah taman yang sangat indah, tinggallah Peri Sakura, penjaga pohon sakura tertua di taman tersebut. Ia memiliki tugas istimewa: menjaga agar bunga sakura mekar dengan indah setiap musim semi.
+
+Suatu hari, seorang gadis kecil bernama Hana datang ke taman dengan wajah sedih. Ia duduk di bawah pohon sakura dan mulai menangis.
+
+Peri Sakura turun dan menampakkan dirinya. "Mengapa kamu menangis, anak kecil?" tanyanya dengan lembut.
+
+Hana terkejut melihat peri cantik di hadapannya. "Aku sedih karena nenek saya sakit. Dokter bilang dia tidak akan sembuh. Aku tidak ingin kehilangan nenek!"
+
+Peri Sakura duduk di sebelah Hana. "Aku mengerti kesedihanmu. Tapi izinkan aku mengajarkan sesuatu tentang kehidupan."
+
+Peri menunjuk ke pohon sakura. "Lihat pohon ini. Setiap musim semi, bunganya mekar dengan sangat indah. Tapi kemudian, kelopak-kelopaknya jatuh."
+
+Hana mengangguk sambil menyeka air matanya.
+
+"Apakah itu sedih? Ya, keindahan bunga yang mekar sangat singkat. Tapi lihat apa yang terjadi selanjutnya," lanjut Peri Sakura.
+
+Dengan sihirnya, Peri menunjukkan siklus pohon sakura: setelah bunga jatuh, pohon menumbuhkan daun hijau yang lebat. Di musim panas, pohon memberikan keteduhan. Di musim gugur, daunnya berubah warna menjadi keemasan yang indah. Di musim dingin, pohon beristirahat, mengumpulkan kekuatan untuk musim semi berikutnya.
+
+"Setiap musim memiliki keindahannya sendiri," kata Peri Sakura. "Dan setiap kelopak yang jatuh memberi nutrisi untuk bunga tahun depan yang akan mekar lebih indah lagi."
+
+Hana mulai mengerti. "Jadi... semua yang terjadi adalah bagian dari siklus kehidupan?"
+
+Peri Sakura tersenyum dan mengangguk. "Benar. Nenekmu telah memberikanmu begitu banyak cinta dan kenangan indah, seperti bunga sakura yang memberikan keindahan. Kenangan itu akan selalu hidup di hatimu dan membuatmu tumbuh menjadi orang yang lebih baik."
+
+Kemudian Peri memberikan Hana sebuah kelopak sakura ajaib yang tidak akan pernah layu. "Simpan ini untuk mengingatkanmu bahwa cinta sejati tidak pernah mati. Ia hidup dalam kenangan dan dalam perbuatan baik yang kita wariskan."
+
+Hana memeluk kelopak itu dengan hati-hati. "Terima kasih, Peri Sakura. Sekarang aku mengerti. Aku harus menghabiskan waktu yang tersisa dengan nenek dengan penuh cinta dan kebahagiaan, bukan kesedihan."
+
+Beberapa minggu kemudian, nenek Hana meninggal dengan damai. Meskipun sedih, Hana tidak tenggelam dalam kesedihan. Ia mengingat pelajaran dari Peri Sakura.
+
+Setiap musim semi, ketika bunga sakura mekar, Hana datang ke taman itu dan merasakan kehadiran neneknya dalam keindahan bunga-bunga tersebut. Ia tumbuh menjadi gadis yang kuat dan penuh kasih, meneruskan kebaikan yang diajarkan neneknya kepada orang lain.
+
+Dan Peri Sakura tersenyum, mengetahui bahwa ia telah membantu Hana memahami keindahan siklus kehidupan dan kekuatan cinta yang abadi.
+
+**Pesan Moral:** Kehidupan adalah siklus perubahan yang indah. Cinta dan kenangan tidak pernah mati, mereka hidup dalam hati kita dan dalam perbuatan baik yang kita lakukan.`
+            },
+            {
+                id: 9,
+                title: "Singa yang Baik Hati",
+                category: "animals",
+                duration: "6 menit",
+                emoji: "🦁",
+                preview: "Seekor singa yang ditakuti semua hewan belajar bahwa kebaikan lebih kuat dari kekuatan...",
+                content: `Di savana yang luas, hiduplah seekor singa bernama Leo yang sangat kuat dan ditakuti oleh semua hewan. Leo selalu berjalan dengan gagah, dan semua hewan langsung lari ketika melihatnya.
+
+Suatu hari, Leo merasa sangat kesepian. "Mengapa semua orang takut padaku?" pikirnya sedih. "Aku ingin punya teman."
+
+Saat Leo berjalan di tepi sungai, ia melihat seekor tikus kecil terjebak di dalam jaring pemburu. Tikus itu menangis ketakutan.
+
+Leo mendekati jaring tersebut. Tikus kecil gemetar melihat singa besar mendekatinya. "Jangan makan aku!" teriak tikus.
+
+Tapi Leo tidak berniat menyakitinya. Dengan cakar besarnya, Leo merobek jaring dan membebaskan tikus kecil.
+
+Tikus sangat terkejut. "Terima kasih, Raja Singa! Kamu sangat baik. Suatu hari nanti, aku akan membalas kebaikanmu!"
+
+Leo tersenyum. "Kamu sangat kecil. Apa yang bisa kamu lakukan untukku? Tapi aku senang bisa membantumu."
+
+Berita tentang kebaikan Leo menyebar ke seluruh savana. Hewan-hewan mulai melihat Leo dengan cara yang berbeda.
+
+Seminggu kemudian, Leo sendiri terjebak dalam jaring pemburu yang sangat besar dan kuat. Ia mencoba merobek jaring itu, tapi semakin ia berusaha, semakin kuat jaring mengikatnya.
+
+Leo meraung keras meminta tolong. Tikus kecil yang pernah diselamatkannya mendengar suara itu.
+
+"Itu suara Leo! Ia dalam bahaya!" kata tikus. Ia segera berlari ke arah suara, diikuti oleh ratusan tikus lainnya.
+
+Ketika mereka tiba, mereka melihat Leo terjebak dan tidak berdaya. "Jangan khawatir, Leo! Kami akan membantumu!" teriak tikus kecil.
+
+Ratusan tikus mulai menggerogoti jaring dari berbagai sisi. Mereka bekerja bersama-sama tanpa henti. Perlahan tapi pasti, jaring mulai robek.
+
+Akhirnya, setelah bekerja keras bersama-sama, mereka berhasil membebaskan Leo!
+
+Leo sangat terharu. "Kalian menyelamatkan hidupku! Maafkan aku karena pernah meremehkan kalian."
+
+Tikus kecil tersenyum. "Leo, kami belajar darimu bahwa kekuatan sejati bukan tentang seberapa besar atau kuat kita, tapi tentang seberapa besar hati kita."
+
+Sejak hari itu, Leo tidak lagi berjalan dengan menakutkan. Ia berjalan dengan ramah dan menyapa semua hewan. Ia menggunakan kekuatannya untuk melindungi hewan-hewan yang lebih lemah, bukan menakuti mereka.
+
+Leo menjadi raja yang dicintai, bukan ditakuti. Ia punya banyak teman, dan savana menjadi tempat yang lebih damai.
+
+Setiap malam, Leo duduk dengan tikus kecil dan teman-teman lainnya, berbagi cerita di bawah bintang-bintang. Dan Leo menyadari bahwa persahabatan dan kebaikan jauh lebih berharga daripada ditakuti.
+
+**Pesan Moral:** Kebaikan dan belas kasihan lebih kuat daripada kekuatan fisik. Kita diingat bukan karena seberapa kuat kita, tapi karena seberapa baik hati kita.`
+            },
+            {
+                id: 10,
+                title: "Kastil di Awan",
+                category: "fairy",
+                duration: "8 menit",
+                emoji: "🏰",
+                preview: "Seorang anak menemukan kastil ajaib di atas awan dan bertemu dengan penjaga mimpi...",
+                content: `Tommy adalah anak kecil yang suka sekali melamun dan bermimpi. Setiap malam, ia menatap langit dan membayangkan ada kastil indah di atas awan.
+
+Suatu malam, ketika bulan purnama bersinar terang, Tommy melihat tangga perak yang muncul dari langit dan turun ke halaman rumahnya.
+
+Dengan penasaran dan berani, Tommy mulai naik tangga tersebut. Ia naik, naik, dan terus naik melewati awan-awan putih yang lembut.
+
+Akhirnya, Tommy tiba di sebuah kastil yang sangat indah terbuat dari kristal dan cahaya bulan. Kastil itu berkilauan dengan cahaya pelangi.
+
+"Selamat datang di Kastil Mimpi," kata suara lembut.
+
+Tommy berbalik dan melihat seorang wanita cantik dengan mahkota bintang. "Aku adalah Penjaga Mimpi. Aku yang membuat semua mimpi indah untuk anak-anak di dunia."
+
+"Benarkah? Wah, luar biasa!" seru Tommy dengan takjub.
+
+Penjaga Mimpi mengajak Tommy berkeliling kastil. Di setiap ruangan, ada hal-hal ajaib yang berbeda.
+
+Di Ruang Warna, Tommy melihat jutaan warna yang bahkan tidak pernah ia lihat sebelumnya. "Ini adalah warna-warna yang hanya ada dalam mimpi," jelas Penjaga Mimpi.
+
+Di Ruang Musik, ada melodi-melodi indah yang tercipta dari tawa anak-anak dan suara alam. "Musik ini membuat mimpi menjadi lebih indah."
+
+Di Ruang Penyimpanan, ada rak-rak yang penuh dengan botol-botol kecil berisi cahaya. "Setiap botol ini adalah mimpi seorang anak. Aku menjaganya dengan baik."
+
+Tommy melihat satu botol yang gelap dan redup. "Kenapa botol itu tidak bercahaya?" tanyanya.
+
+Penjaga Mimpi terlihat sedih. "Itu adalah mimpi seorang anak yang sudah berhenti bermimpi. Ia kehilangan harapan dan berhenti percaya pada hal-hal indah."
+
+Tommy merasa sedih mendengarnya. "Bisakah kita membantu anak itu?"
+
+Penjaga Mimpi tersenyum. "Kamu punya hati yang baik, Tommy. Ya, kita bisa membantu. Tapi aku butuh bantuanmu."
+
+Penjaga Mimpi menjelaskan bahwa untuk membuat mimpi bersinar lagi, mereka perlu mengumpulkan tiga hal: tawa yang tulus, harapan yang kuat, dan kebaikan yang ikhlas.
+
+Tommy berpikir sejenak. "Aku punya tawa yang tulus! Aku selalu tertawa ketika bermain dengan teman-temanku."
+
+Ia memikirkan ibunya yang selalu memberinya pelukan hangat. "Aku punya harapan yang kuat! Aku selalu berharap semua orang bisa bahagia."
+
+Dan ia mengingat saat ia berbagi bekal makanannya dengan teman yang kelaparan. "Aku punya kebaikan yang ikhlas! Aku suka membantu orang lain."
+
+Penjaga Mimpi tersentuh. "Tommy, kamu sudah memiliki semuanya. Sekarang, tiup botol mimpi yang gelap itu dengan semua kebaikan di hatimu."
+
+Tommy meniup botol dengan lembut, membayangkan semua hal indah yang ia miliki. Perlahan, botol itu mulai bersinar! Cahayanya menjadi semakin terang, berubah menjadi pelangi yang indah.
+
+"Kamu berhasil, Tommy! Kamu telah membantu seorang anak menemukan kembali mimpinya," kata Penjaga Mimpi dengan bangga.
+
+Sebagai hadiah, Penjaga Mimpi memberikan Tommy sebuah bintang kecil. "Simpan ini. Setiap kali kamu melihat bintang di langit, ingatlah bahwa mimpi-mimpi indah selalu ada untuk mereka yang percaya."
+
+Ketika Tommy turun kembali dengan tangga perak, ia menemukan dirinya di tempat tidur. Apakah itu mimpi? Tapi di tangannya, ada bintang kecil yang masih bersinar lembut.
+
+Sejak malam itu, Tommy tidak hanya bermimpi untuk dirinya sendiri. Ia membantu teman-temannya untuk bermimpi dan percaya pada hal-hal indah. Ia berbagi kebaikan, tawa, dan harapan kepada semua orang.
+
+Dan setiap malam, ketika ia menatap langit, ia bisa melihat kastil di awan yang berkilauan, mengingatkannya bahwa mimpi adalah hal yang sangat berharga yang harus dijaga dan dibagikan.
+
+**Pesan Moral:** Mimpi dan harapan adalah hal yang sangat berharga. Dengan tawa, harapan, dan kebaikan, kita bisa membuat dunia menjadi tempat yang lebih indah, tidak hanya untuk diri sendiri tapi juga untuk orang lain.`
+            },
+            {
+                id: 11,
+                title: "Perjalanan Lumba-lumba Kecil",
+                category: "adventure",
+                duration: "7 menit",
+                emoji: "🐬",
+                preview: "Seekor lumba-lumba kecil memulai petualangan melintasi samudra untuk menemukan keluarganya...",
+                content: `Di lautan biru yang luas, hiduplah seekor lumba-lumba kecil bernama Splash. Ia terpisah dari kelompoknya saat ada badai besar.
+
+Ketika badai reda, Splash menemukan dirinya sendirian di bagian laut yang tidak ia kenal. "Aku harus menemukan keluargaku!" tekadnya dengan berani.
+
+Splash mulai berenang, mengikuti arah matahari terbit seperti yang diajarkan ibunya. Dalam perjalanannya, ia bertemu dengan seekor penyu tua bernama Wise.
+
+"Selamat pagi, Lumba-lumba Kecil. Kemana kamu pergi sendirian?" tanya Wise dengan bijaksana.
+
+Splash menceritakan kisahnya. Wise mendengarkan dengan sabar. "Perjalananmu akan panjang, tapi aku akan membantumu. Ikuti arus hangat ke utara. Kelompok lumba-lumba biasanya berkumpul di sana saat musim ini."
+
+"Terima kasih, Pak Penyu!" kata Splash dengan gembira.
+
+Dalam perjalanannya, Splash bertemu dengan sekumpulan ikan tuna yang berenang dengan sangat cepat.
+
+"Hei, Lumba-lumba! Mau balapan?" tantang mereka.
+
+Splash ingat ibunya pernah berkata, "Jangan buang energimu untuk hal-hal yang tidak penting." Jadi ia menjawab dengan sopan, "Terima kasih, tapi aku sedang mencari keluargaku. Ini lebih penting."
+
+Ikan-ikan tuna mengerti dan malah membantu menunjukkan jalan terpendek.
+
+Beberapa hari kemudian, Splash melihat jaring besar mengapung di laut. Di dalamnya terjebak seekor anak hiu yang ketakutan.
+
+Meskipun takut, Splash ingat pelajaran ibunya: "Selalu bantu mereka yang membutuhkan, apa pun spesiesnya."
+
+Dengan hati-hati, Splash menggunakan moncongnya untuk membuka jaring. Setelah berusaha keras, anak hiu berhasil bebas!
+
+"Kamu menyelamatkanku! Namaku Finn. Terima kasih!" kata anak hiu.
+
+"Sama-sama. Aku Splash," jawabnya dengan senyum.
+
+Finn mendengar cerita Splash dan berkata, "Aku tahu dimana banyak lumba-lumba berkumpul! Aku akan mengantarmu ke sana!"
+
+Bersama-sama, mereka berenang melewati terumbu karang yang indah, gua-gua bawah laut yang misterius, dan hutan rumput laut yang lebat.
+
+Di suatu tempat yang gelap dan dalam, mereka bertemu dengan seekor gurita raksasa. "Siapa yang berani masuk ke wilayahku?" tanya gurita dengan suara menggelegar.
+
+Splash gemetar ketakutan, tapi Finn melindunginya. "Kami hanya lewat, Pak Gurita. Temanku sedang mencari keluarganya."
+
+Gurita raksasa melihat keberanian persahabatan mereka. "Hmm, persahabatan sejati sangat langka di lautan. Aku akan membantumu."
+
+Gurita menggunakan tentakelnya yang panjang untuk menunjukkan jalan keluar dari labirin bawah laut.
+
+Akhirnya, setelah berhari-hari berpetualang, Splash mendengar suara familiar - klik dan peluit khas lumba-lumba!
+
+"Itu mereka! Itu kelompokku!" seru Splash dengan girang.
+
+Splash berenang secepat mungkin. Di kejauhan, ia melihat ibunya! "Ibu! Ibu!" panggilnya.
+
+Ibunya mendengar suara Splash dan langsung berenang ke arahnya. Mereka bertemu dengan penuh air mata kebahagiaan.
+
+"Splash! Kami mencarimu ke mana-mana! Syukurlah kamu selamat!" kata ibunya sambil memeluk Splash.
+
+Splash memperkenalkan Finn dan menceritakan semua petualangannya - tentang Wise sang penyu bijaksana, ikan tuna yang membantu, gurita raksasa yang baik hati, dan terutama Finn yang menjadi sahabat terbaiknya.
+
+"Kamu telah belajar pelajaran penting dalam perjalananmu," kata ibunya dengan bangga. "Kamu belajar tentang keberanian, kebaikan, dan persahabatan."
+
+Sejak hari itu, Splash dan Finn menjadi sahabat selamanya. Mereka membuktikan bahwa persahabatan sejati tidak mengenal perbedaan, dan bahwa dengan keberanian dan kebaikan, setiap perjalanan yang sulit bisa diselesaikan.
+
+Setiap malam, di bawah cahaya bulan yang memantul di permukaan laut, Splash menceritakan petualangannya kepada lumba-lumba muda lainnya, mengajari mereka bahwa kadang-kadang tersesat adalah cara menemukan hal-hal berharga yang tidak pernah kita ketahui.
+
+**Pesan Moral:** Dalam setiap perjalanan yang sulit, kita menemukan kekuatan, keberanian, dan persahabatan. Kebaikan yang kita berikan kepada orang lain akan kembali kepada kita ketika kita membutuhkannya.`
+            },
+            {
+                id: 12,
+                title: "Pohon Ajaib yang Berbicara",
+                category: "fairy",
+                duration: "6 menit",
+                emoji: "🌳",
+                preview: "Sebuah pohon tua yang ajaib memberikan kebijaksanaan kepada siapa saja yang mendengarkan...",
+                content: `Di tengah hutan tua, tumbuh sebuah pohon oak yang sangat besar dan tua. Pohon ini istimewa karena ia bisa berbicara dengan mereka yang benar-benar mendengarkan.
+
+Suatu hari, tiga anak datang ke hutan tersebut: Rina yang sombong, Doni yang tergesa-gesa, dan Lala yang sabar.
+
+Rina berjalan melewati pohon dengan angkuh. "Aku adalah anak terpintar di sekolah! Aku tidak butuh nasihat dari siapa pun, apalagi dari pohon tua!"
+
+Pohon tetap diam. Ia tidak akan berbicara dengan mereka yang tidak mau mendengar.
+
+Doni datang dengan terburu-buru. "Hei, Pohon! Aku dengar kamu bisa memberikan jawaban. Cepat beritahu aku bagaimana cara menjadi kaya!"
+
+Pohon bergerak pelan, tapi Doni sudah berlari ke tempat lain sebelum pohon bisa berbicara.
+
+Kemudian datanglah Lala. Ia duduk dengan tenang di bawah pohon, menyandarkan punggungnya pada batang pohon yang kuat.
+
+"Halo, Pohon Tua," kata Lala dengan lembut. "Kamu pasti sudah melihat banyak hal selama bertahun-tahun. Aku ingin belajar darimu."
+
+Pohon merasa senang. Akhirnya ada seseorang yang benar-benar mau mendengarkan. Daun-daunnya bergerak pelan, dan terdengar suara yang bijaksana.
+
+"Anak kecil yang sabar, aku akan berbagi tiga kebijaksanaan denganmu," kata Pohon.
+
+"Pertama, kesabaran. Lihatlah aku. Aku tumbuh sangat lambat, hanya beberapa sentimeter setiap tahun. Tapi sekarang aku tinggi dan kuat. Hal-hal baik memerlukan waktu."
+
+Lala mengangguk sambil mendengarkan dengan seksama.
+
+"Kedua, memberi tanpa mengharap imbalan. Aku memberikan keteduhan di musim panas, buah untuk hewan-hewan, dan rumah untuk burung-burung. Aku tidak meminta apa pun sebagai balasan. Kebahagiaan sejati datang dari memberi."
+
+Lala tersenyum, memahami kebijaksanaan tersebut.
+
+"Ketiga, kekuatan sejati datang dari akar yang dalam. Akar-akarku menancap dalam ke tanah, memberiku kekuatan untuk menghadapi badai apa pun. Begitu juga dengan manusia - kekuatanmu datang dari nilai-nilai yang kamu pegang, dari keluarga dan sahabat yang mendukungmu."
+
+Lala mendengarkan setiap kata dengan hati yang terbuka.
+
+"Terima kasih, Pohon Tua yang bijaksana," kata Lala. "Aku akan mengingat setiap pelajaran yang kamu berikan."
+
+Sebagai hadiah, Pohon menjatuhkan sebuah biji oak yang bersinar di pangkuan Lala. "Tanam biji ini dengan sabar, rawat dengan cinta, dan suatu hari ia akan tumbuh menjadi pohon yang kuat."
+
+Beberapa minggu kemudian, Rina datang lagi ke hutan. Kali ini ia tidak sombong. Ia gagal dalam ujian dan merasa sedih.
+
+"Pohon Tua, maafkan kesombonganku dulu," katanya dengan tulus. "Aku menyadari bahwa pintar saja tidak cukup. Aku butuh belajar menjadi rendah hati."
+
+Pohon berbicara dengannya, mengajarinya tentang kerendahan hati dan bahwa belajar adalah perjalanan seumur hidup.
+
+Doni juga kembali, kali ini tidak terburu-buru. Ia gagal dalam bisnisnya karena terlalu serakah. "Aku mengerti sekarang," katanya. "Aku perlu belajar sabar dan tidak terburu-buru."
+
+Pohon mengajarinya bahwa kekayaan sejati bukan tentang uang, tapi tentang hubungan dan kebijaksanaan yang kita kumpulkan.
+
+Lala terus datang untuk mengunjungi Pohon Tua, membawa air untuk menyirami biji oak yang ia tanam. Ia tumbuh menjadi gadis yang bijaksana, sabar, dan baik hati.
+
+Bertahun-tahun kemudian, biji oak yang ditanam Lala tumbuh menjadi pohon muda yang kuat. Dan pohon muda itu, belajar dari induknya, juga mulai berbicara dengan mereka yang mau mendengarkan.
+
+Kebijaksanaan terus mengalir dari generasi ke generasi, dari mereka yang mau mengajarkan kepada mereka yang mau belajar.
+
+**Pesan Moral:** Kebijaksanaan datang kepada mereka yang mau mendengarkan dengan sabar. Kesombongan dan tergesa-gesa menghalangi kita dari pembelajaran. Kerendahan hati dan kesabaran membuka pintu menuju pengetahuan sejati.`
+            },
+            {
+                id: 13,
+                title: "Petualangan di Pulau Harta Karun",
+                category: "adventure",
+                duration: "8 menit",
+                emoji: "🏴‍☠️",
+                preview: "Sekelompok teman menemukan peta harta karun dan belajar bahwa persahabatan adalah harta terbesar...",
+                content: `Di sebuah desa nelayan, empat sahabat - Rudi, Santi, Bambang, dan Dewi - menemukan botol tua yang terdampar di pantai. Di dalamnya ada peta harta karun yang lusuh!
+
+"Lihat ini! Ada tanda X di Pulau Terasing!" seru Rudi dengan mata berbinar.
+
+"Kita harus pergi ke sana!" kata Santi dengan antusias.
+
+Mereka meminjam perahu kecil dari ayah Bambang dan memulai petualangan mereka. Laut tenang dan langit cerah, seperti memberkati perjalanan mereka.
+
+Setelah berlayar beberapa jam, mereka tiba di sebuah pulau kecil yang dipenuhi pohon kelapa dan pasir putih.
+
+"Sesuai peta, kita harus berjalan ke arah utara sampai menemukan batu besar berbentuk tengkorak," kata Dewi sambil memeriksa peta.
+
+Mereka berjalan melewati hutan tropis yang lebat. Tiba-tiba, mereka menemukan jurang yang dalam menghalangi jalan mereka.
+
+"Bagaimana kita menyeberang?" tanya Santi khawatir.
+
+Bambang melihat pohon besar di dekat jurang. "Kita bisa menebang pohon ini untuk membuat jembatan!"
+
+Mereka bekerja sama - Rudi dan Bambang menebang pohon, Santi dan Dewi mencari tali untuk mengikat pohon agar aman. Dengan kerja sama tim yang solid, mereka berhasil menyeberang!
+
+Setelah berjalan lebih jauh, mereka menemukan batu besar berbentuk tengkorak. "Ini dia!" teriak mereka bersamaan.
+
+Sesuai peta, mereka harus menggali 10 langkah ke timur dari batu tersebut. Mereka mulai menggali dengan semangat.
+
+Tiba-tiba, sekop Rudi menyentuh sesuatu yang keras. "Aku menemukan sesuatu!"
+
+Dengan hati-hati, mereka menggali lebih dalam dan menemukan peti kayu besar yang berat. Dengan susah payah, mereka mengangkatnya keluar.
+
+"Ini dia! Harta karun!" teriak Santi.
+
+Tapi ketika mereka membuka peti tersebut, mereka terkejut. Di dalamnya bukan emas atau permata, tapi ada empat kalung dengan liontin berbeda: kompas, hati, buku, dan tangan.
+
+Mereka juga menemukan sebuah surat tua:
+
+"Kepada mereka yang menemukan harta ini,
+
+Aku adalah Kapten yang pernah menghabiskan hidupnya mencari kekayaan. Aku kehilangan keluarga dan teman-teman karena keserakahanku.
+
+Akhirnya aku menyadari bahwa harta sejati bukan emas atau permata. Harta sejati adalah:
+
+- Kompas: Arah dan tujuan yang jelas dalam hidup
+- Hati: Cinta dan persahabatan
+- Buku: Pengetahuan dan kebijaksanaan
+- Tangan: Kerja sama dan saling membantu
+
+Jika kalian menemukan ini bersama teman-teman, maka kalian sudah menemukan harta yang paling berharga - persahabatan.
+
+- Kapten Silver Beard"
+
+Keempat sahabat terdiam sejenak, kemudian mereka saling berpandangan dan tersenyum.
+
+"Dia benar," kata Dewi dengan bijak. "Sepanjang perjalanan ini, kita bekerja sama, saling membantu, dan tidak ada yang mementingkan diri sendiri."
+
+"Dan yang terpenting, kita melakukannya bersama-sama!" tambah Rudi.
+
+Mereka membagi kalung tersebut - Rudi mengambil kompas, Santi mengambil hati, Dewi mengambil buku, dan Bambang mengambil tangan.
+
+"Mari kita bersumpah," kata Bambang. "Kita akan selalu menjadi sahabat, saling mendukung dalam suka maupun duka."
+
+"Bersumpah!" teriak mereka berempat sambil menyatukan tangan.
+
+Ketika mereka kembali ke desa dengan perahu, penduduk desa bertanya, "Kalian menemukan harta karun?"
+
+Keempat sahabat saling berpandangan dan tersenyum. "Ya, kami menemukan harta yang paling berharga," jawab mereka.
+
+Mereka tidak menceritakan tentang peti kosong atau surat dari Kapten. Mereka hanya memakai kalung mereka dengan bangga dan menjaga persahabatan mereka dengan erat.
+
+Bertahun-tahun kemudian, ketika mereka sudah dewasa dan memiliki keluarga sendiri, mereka masih bertemu setiap minggu. Mereka menceritakan kisah petualangan mereka kepada anak-anak mereka.
+
+Dan kalung yang mereka temukan di pulau itu masih mereka pakai, mengingatkan mereka bahwa persahabatan sejati adalah harta yang tidak ternilai harganya.
+
+**Pesan Moral:** Harta yang paling berharga dalam hidup bukan emas atau permata, tapi persahabatan, cinta, pengetahuan, dan kerja sama. Kekayaan sejati adalah memiliki orang-orang yang peduli dan mendukung kita.`
+            },
+            {
+                id: 14,
+                title: "Rubah Pintar dan Gagak",
+                category: "animals",
+                duration: "5 menit",
+                emoji: "🦊",
+                preview: "Seekor rubah pintar belajar bahwa kejujuran lebih baik daripada kecerdikan yang curang...",
+                content: `Di sebuah hutan, hiduplah seekor rubah yang sangat pintar bernama Roxy. Ia terkenal karena kecerdikannya dalam mendapatkan makanan.
+
+Suatu hari, Roxy melihat seekor gagak hinggap di dahan pohon sambil memegang sepotong keju yang besar di paruhnya.
+
+"Hmm, keju itu terlihat lezat," pikir Roxy. Ia mulai memutar otaknya untuk mendapatkan keju tersebut.
+
+Roxy mendekati pohon dan berteriak, "Halo, Gagak yang cantik! Bulumu berkilau seperti permata!"
+
+Gagak merasa senang mendengar pujian, tapi ia tidak menjawab karena takut keju di paruhnya jatuh.
+
+"Aku dengar kamu punya suara yang sangat merdu," lanjut Roxy. "Lebih merdu dari burung bulbul! Bisakah kamu bernyanyi untukku?"
+
+Gagak merasa sangat tersanjung. Ia lupa pada keju di paruhnya dan membuka mulut untuk bernyanyi. "Kaaak!"
+
+Tentu saja, keju itu jatuh tepat ke mulut Roxy yang sudah menunggu di bawah!
+
+"Terima kasih, Gagak yang bodoh!" kata Roxy sambil tertawa dan lari membawa keju.
+
+Gagak merasa sangat sedih dan marah pada dirinya sendiri karena mudah tertipu.
+
+Beberapa hari kemudian, Roxy terjebak dalam perangkap pemburu. Ia mencoba sekuat tenaga untuk keluar, tapi tidak bisa. Ia mulai panik.
+
+Gagak yang sama terbang melewati tempat itu dan melihat Roxy terjebak.
+
+"Tolong aku!" mohon Roxy. "Aku minta maaf karena telah menipumu!"
+
+Gagak terdiam sejenak. Ia bisa saja membiarkan Roxy terjebak sebagai balasan. Tapi kemudian ia ingat kata-kata bijak ibunya: "Balas keburukan dengan kebaikan."
+
+"Baiklah, aku akan membantumu," kata Gagak. "Tapi kamu harus berjanji untuk tidak menipu lagi."
+
+Gagak terbang ke desa dan membawa tikus untuk menarik perhatian anjing pemburu. Anjing mengejar tikus dan menjauh dari perangkap.
+
+Kemudian Gagak memanggil teman-temannya. Bersama-sama, mereka mematuk tali perangkap sampai Roxy bisa keluar.
+
+Roxy merasa sangat malu. "Gagak, maafkan aku. Aku sudah jahat padamu, tapi kamu justru menyelamatkanku."
+
+Gagak tersenyum. "Roxy, kamu memang pintar. Tapi kepintaran yang digunakan untuk menipu hanya akan membuatmu kesepian dan dalam masalah. Gunakan kepintaranmu untuk kebaikan."
+
+Sejak hari itu, Roxy berubah. Ia menggunakan kecerdasannya untuk membantu hewan-hewan lain di hutan.
+
+Ketika seekor kelinci terjebak di semak berduri, Roxy membantu mencarikan jalan keluar.
+
+Ketika burung-burung kecil kehilangan sarang mereka, Roxy membantu menemukan tempat yang aman.
+
+Roxy dan Gagak menjadi sahabat baik. Mereka sering berburu bersama, berbagi hasil buruan dengan adil.
+
+Hewan-hewan lain di hutan yang tadinya takut dan tidak suka pada Roxy, sekarang menghormati dan menyukai dia.
+
+Roxy belajar bahwa memiliki banyak teman yang mempercayaimu jauh lebih berharga daripada mendapatkan makanan dengan cara menipu.
+
+Suatu hari, seekor rubah muda bertanya pada Roxy, "Bagaimana cara mendapatkan makanan dengan mudah?"
+
+Roxy tersenyum dan menjawab, "Bukan dengan menipu. Gunakan kepintaranmu untuk membantu orang lain, dan mereka akan membantumu juga. Itulah cara terbaik."
+
+**Pesan Moral:** Kecerdasan harus digunakan untuk kebaikan, bukan untuk menipu atau merugikan orang lain. Kejujuran dan kebaikan akan mendatangkan teman dan kebahagiaan yang sejati. Kepercayaan yang kita rusak sangat sulit untuk diperbaiki.`
+            },
+            {
+                id: 15,
+                title: "Peri Pelangi dan Tetesan Hujan",
+                category: "fairy",
+                duration: "7 menit",
+                emoji: "🌈",
+                preview: "Peri pelangi mengajarkan tentang indahnya perbedaan dan pentingnya bekerja sama...",
+                content: `Tinggi di langit, di atas awan putih yang mengembang, tinggallah Peri Pelangi bernama Iris. Tugasnya adalah membuat pelangi setelah hujan turun.
+
+Iris memiliki tujuh sahabat - Tetesan Hujan - yang masing-masing mewakili warna berbeda: Merah, Jingga, Kuning, Hijau, Biru, Nila, dan Ungu.
+
+Suatu hari, para Tetesan Hujan mulai bertengkar.
+
+"Merah adalah warna terpenting!" seru Tetesan Merah. "Aku warna api dan keberanian!"
+
+"Tidak! Kuning lebih penting!" teriak Tetesan Kuning. "Aku warna matahari dan kebahagiaan!"
+
+"Kalian salah!" sahut Tetesan Biru. "Aku warna langit dan laut, yang paling luas di dunia!"
+
+Semua Tetesan mulai bertengkar, masing-masing mengklaim warnanya yang paling penting.
+
+Iris merasa sedih melihat sahabat-sahabatnya bertengkar. "Teman-teman, kenapa kalian bertengkar?" tanyanya dengan lembut.
+
+"Kami ingin tahu siapa yang paling penting!" jawab mereka bersamaan.
+
+Iris tersenyum bijaksana. "Baiklah, mari kita coba sesuatu. Hari ini, hanya satu dari kalian yang boleh membuat pelangi bersamaku."
+
+Para Tetesan setuju. Mereka memutuskan untuk bergiliran.
+
+Hari pertama, hanya Tetesan Merah yang turun. Setelah hujan, Iris mencoba membuat pelangi. Tapi yang muncul hanya garis merah di langit. Tidak ada keindahan pelangi yang biasa.
+
+Anak-anak di bumi kecewa. "Pelanginya tidak lengkap!" kata mereka.
+
+Hari kedua, hanya Tetesan Kuning yang turun. Hasilnya sama - hanya garis kuning yang membosankan.
+
+Hari ketiga, Tetesan Biru mencoba sendirian. Hasilnya tetap tidak memuaskan.
+
+Setelah tujuh hari mencoba sendirian, para Tetesan menyadari sesuatu. Mereka semua merasa kesepian, dan pelangi yang mereka buat tidak indah.
+
+Tetesan Merah berkata dengan sedih, "Aku merindukanmu, Jingga. Bersamamu, aku terlihat lebih hidup."
+
+Tetesan Kuning mengangguk, "Aku juga merindukanmu, Hijau. Kamu membuatku terlihat lebih segar."
+
+Satu per satu, mereka mengakui bahwa mereka membutuhkan satu sama lain.
+
+Iris tersenyum. "Sekarang kalian mengerti? Tidak ada warna yang paling penting. Kalian semua istimewa dengan cara kalian sendiri. Tapi keindahan sejati muncul ketika kalian bersama."
+
+"Mari kita membuat pelangi bersama-sama!" seru para Tetesan dengan gembira.
+
+Keesokan harinya, setelah hujan turun, semua Tetesan bekerja sama. Iris menggunakan sihirnya, dan terciptalah pelangi paling indah yang pernah ada!
+
+Merah memberikan kehangatan dan keberanian.
+Jingga memberikan semangat dan antusiasme.
+Kuning memberikan kegembiraan dan optimisme.
+Hijau memberikan kedamaian dan kesegaran.
+Biru memberikan ketenangan dan kepercayaan.
+Nila memberikan kebijaksanaan dan kedalaman.
+Ungu memberikan kreativitas dan keajaiban.
+
+Bersama-sama, mereka menciptakan lengkungan indah yang membentang dari ujung langit ke ujung lainnya.
+
+Anak-anak di bumi bersorak girang. "Lihat! Pelangi terindah yang pernah ada!"
+
+Para Tetesan merasa bahagia. Mereka menyadari bahwa kekuatan mereka bukan pada individualitas mereka, tapi pada kesatuan mereka.
+
+Iris berkata dengan penuh kasih, "Ingatlah, teman-teman. Dunia ini indah karena perbedaan. Setiap orang memiliki keunikan sendiri, seperti setiap warna memiliki keindahan sendiri. Tapi harmoni dan keindahan sejati terjadi ketika kita bersatu dalam perbedaan."
+
+Sejak hari itu, para Tetesan tidak pernah bertengkar lagi. Mereka menghargai satu sama lain dan bekerja sama dengan harmonis.
+
+Dan setiap kali pelangi muncul di langit, itu mengingatkan semua orang di bumi bahwa perbedaan adalah hal yang indah, dan bersama-sama kita bisa menciptakan sesuatu yang luar biasa.
+
+Anak-anak yang melihat pelangi belajar untuk menghargai teman-teman mereka yang berbeda - yang memiliki warna kulit berbeda, bahasa berbeda, atau kemampuan berbeda - karena mereka tahu bahwa keragaman itulah yang membuat dunia menjadi indah.
+
+**Pesan Moral:** Setiap orang istimewa dan berharga dengan caranya sendiri. Perbedaan bukanlah alasan untuk bertengkar, tapi alasan untuk bersatu. Bersama dalam perbedaan, kita bisa menciptakan sesuatu yang jauh lebih indah daripada sendirian.`
+            }
+        ];
+
+        let currentCategory = 'all';
+        let currentStory = null;
+
+        async function onConfigChange(config) {
+            const app = document.getElementById('app');
+            const customFont = config.font_family || defaultConfig.font_family;
+            const baseFont = `${customFont}, Georgia, serif`;
+            const baseSize = config.font_size || defaultConfig.font_size;
+            
+            app.style.backgroundColor = config.background_color || defaultConfig.background_color;
+            app.style.fontFamily = baseFont;
+            
+            // Update title
+            const title = document.getElementById('appTitle');
+            if (title) {
+                title.textContent = config.app_title || defaultConfig.app_title;
+                title.style.color = config.accent_color || defaultConfig.accent_color;
+                title.style.fontSize = `${baseSize * 2}px`;
+                title.style.fontFamily = baseFont;
+            }
+            
+            // Update subtitle
+            const subtitle = document.getElementById('appSubtitle');
+            if (subtitle) {
+                subtitle.textContent = config.app_subtitle || defaultConfig.app_subtitle;
+                subtitle.style.color = config.text_color || defaultConfig.text_color;
+                subtitle.style.fontSize = `${baseSize}px`;
+                subtitle.style.fontFamily = baseFont;
+            }
+            
+            // Update category buttons
+            const categoryButtons = document.querySelectorAll('.category-btn');
+            categoryButtons.forEach((btn, index) => {
+                const categories = ['all', 'animals', 'fairy', 'adventure'];
+                const categoryNames = [
+                    config.category_all || defaultConfig.category_all,
+                    config.category_animals || defaultConfig.category_animals,
+                    config.category_fairy || defaultConfig.category_fairy,
+                    config.category_adventure || defaultConfig.category_adventure
+                ];
+                
+                btn.textContent = categoryNames[index];
+                btn.style.fontSize = `${baseSize * 0.9}px`;
+                btn.style.fontFamily = baseFont;
+                btn.style.color = config.text_color || defaultConfig.text_color;
+                
+                if (btn.classList.contains('active')) {
+                    btn.style.backgroundColor = config.button_color || defaultConfig.button_color;
+                    btn.style.color = '#ffffff';
+                } else {
+                    btn.style.backgroundColor = config.card_color || defaultConfig.card_color;
+                    btn.style.color = config.text_color || defaultConfig.text_color;
+                }
+            });
+            
+            // Update story cards
+            const storyCards = document.querySelectorAll('.story-card');
+            storyCards.forEach(card => {
+                card.style.backgroundColor = config.card_color || defaultConfig.card_color;
+                card.style.fontFamily = baseFont;
+                
+                const cardTitle = card.querySelector('.story-title');
+                if (cardTitle) {
+                    cardTitle.style.color = config.text_color || defaultConfig.text_color;
+                    cardTitle.style.fontSize = `${baseSize * 1.25}px`;
+                }
+                
+                const cardPreview = card.querySelector('.story-preview');
+                if (cardPreview) {
+                    cardPreview.style.color = config.text_color || defaultConfig.text_color;
+                    cardPreview.style.fontSize = `${baseSize * 0.9}px`;
+                }
+                
+                const cardDuration = card.querySelector('.story-duration');
+                if (cardDuration) {
+                    cardDuration.style.color = config.accent_color || defaultConfig.accent_color;
+                    cardDuration.style.fontSize = `${baseSize * 0.85}px`;
+                }
+                
+                const readBtn = card.querySelector('.read-btn');
+                if (readBtn) {
+                    readBtn.style.backgroundColor = config.button_color || defaultConfig.button_color;
+                    readBtn.style.fontSize = `${baseSize * 0.9}px`;
+                }
+            });
+            
+            // Update modal if open
+            const modal = document.getElementById('storyModal');
+            if (modal && modal.style.display !== 'none') {
+                const modalContent = modal.querySelector('.modal-content');
+                if (modalContent) {
+                    modalContent.style.backgroundColor = config.card_color || defaultConfig.card_color;
+                    modalContent.style.fontFamily = baseFont;
+                    
+                    const modalTitle = modal.querySelector('.modal-title');
+                    if (modalTitle) {
+                        modalTitle.style.color = config.text_color || defaultConfig.text_color;
+                        modalTitle.style.fontSize = `${baseSize * 1.75}px`;
+                    }
+                    
+                    const modalStoryContent = modal.querySelector('.story-content');
+                    if (modalStoryContent) {
+                        modalStoryContent.style.color = config.text_color || defaultConfig.text_color;
+                        modalStoryContent.style.fontSize = `${baseSize}px`;
+                    }
+                    
+                    const closeBtn = modal.querySelector('.close-btn');
+                    if (closeBtn) {
+                        closeBtn.style.color = config.text_color || defaultConfig.text_color;
+                        closeBtn.style.fontSize = `${baseSize * 2}px`;
+                    }
+                }
+            }
+            
+            // Update relationship counter styling
+            const relationshipCounter = document.getElementById('relationshipCounter');
+            if (relationshipCounter) {
+                relationshipCounter.style.color = config.text_color || defaultConfig.text_color;
+                relationshipCounter.style.fontSize = `${baseSize * 1.1}px`;
+                relationshipCounter.style.fontFamily = baseFont;
+                relationshipCounter.style.borderColor = config.accent_color || defaultConfig.accent_color;
+                
+                const counterTitle = relationshipCounter.querySelector('div:first-child');
+                if (counterTitle) {
+                    counterTitle.style.fontSize = `${baseSize * 1.3}px`;
+                }
+                
+                const counterDisplay = document.getElementById('counterDisplay');
+                if (counterDisplay) {
+                    counterDisplay.style.fontSize = `${baseSize * 1.5}px`;
+                    counterDisplay.style.color = config.accent_color || defaultConfig.accent_color;
+                    counterDisplay.style.textShadow = `0 0 10px ${config.accent_color || defaultConfig.accent_color}`;
+                }
+            }
+        }
+
+        function renderApp() {
+            const app = document.getElementById('app');
+            const config = window.elementSdk ? window.elementSdk.config : defaultConfig;
+            
+            app.innerHTML = `
+                <!-- Background Image -->
+                <div style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-image: url('https://iili.io/fMEf6yG.png'); background-size: cover; background-position: center; background-repeat: no-repeat; pointer-events: none; z-index: 0;"></div>
+                
+                <!-- Dark Overlay for better text readability -->
+                <div style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.3); pointer-events: none; z-index: 1;"></div>
+                
+                <!-- Main content -->
+                <div class="mobile-optimized" style="position: relative; z-index: 2; padding: 40px 20px; max-width: 1400px; margin: 0 auto;">
+                    <!-- Header with heart icon -->
+                    <div style="text-align: center; margin-bottom: 40px;">
+                        <div class="heart-icon" style="font-size: 48px; margin-bottom: 10px;">📚</div>
+                        <h1 id="appTitle" style="font-size: ${(config.font_size || defaultConfig.font_size) * 2}px; font-weight: bold; margin-bottom: 10px; color: ${config.accent_color || defaultConfig.accent_color}; text-shadow: 0 0 20px ${config.accent_color || defaultConfig.accent_color}; font-family: ${config.font_family || defaultConfig.font_family}, Georgia, serif; line-height: 1.2;">
+                            ${config.app_title || defaultConfig.app_title}
+                        </h1>
+                        <p id="appSubtitle" style="font-size: ${config.font_size || defaultConfig.font_size}px; color: ${config.text_color || defaultConfig.text_color}; opacity: 0.9; font-family: ${config.font_family || defaultConfig.font_family}, Georgia, serif; padding: 0 10px;">
+                            ${config.app_subtitle || defaultConfig.app_subtitle}
+                        </p>
+                    </div>
+                    
+                    <!-- Categories -->
+                    <div style="display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; margin-bottom: 30px; padding: 0 10px;">
+                        <button class="category-btn active" data-category="all" style="padding: 10px 20px; border-radius: 25px; border: 2px solid ${config.button_color || defaultConfig.button_color}; background: ${config.button_color || defaultConfig.button_color}; color: #ffffff; font-size: ${(config.font_size || defaultConfig.font_size) * 0.85}px; cursor: pointer; font-family: ${config.font_family || defaultConfig.font_family}, Georgia, serif; font-weight: 600; white-space: nowrap;">
+                            ${config.category_all || defaultConfig.category_all}
+                        </button>
+                        <button class="category-btn" data-category="animals" style="padding: 10px 20px; border-radius: 25px; border: 2px solid ${config.button_color || defaultConfig.button_color}; background: ${config.card_color || defaultConfig.card_color}; color: ${config.text_color || defaultConfig.text_color}; font-size: ${(config.font_size || defaultConfig.font_size) * 0.85}px; cursor: pointer; font-family: ${config.font_family || defaultConfig.font_family}, Georgia, serif; font-weight: 600; white-space: nowrap;">
+                            ${config.category_animals || defaultConfig.category_animals}
+                        </button>
+                        <button class="category-btn" data-category="fairy" style="padding: 10px 20px; border-radius: 25px; border: 2px solid ${config.button_color || defaultConfig.button_color}; background: ${config.card_color || defaultConfig.card_color}; color: ${config.text_color || defaultConfig.text_color}; font-size: ${(config.font_size || defaultConfig.font_size) * 0.85}px; cursor: pointer; font-family: ${config.font_family || defaultConfig.font_family}, Georgia, serif; font-weight: 600; white-space: nowrap;">
+                            ${config.category_fairy || defaultConfig.category_fairy}
+                        </button>
+                        <button class="category-btn" data-category="adventure" style="padding: 10px 20px; border-radius: 25px; border: 2px solid ${config.button_color || defaultConfig.button_color}; background: ${config.card_color || defaultConfig.card_color}; color: ${config.text_color || defaultConfig.text_color}; font-size: ${(config.font_size || defaultConfig.font_size) * 0.85}px; cursor: pointer; font-family: ${config.font_family || defaultConfig.font_family}, Georgia, serif; font-weight: 600; white-space: nowrap;">
+                            ${config.category_adventure || defaultConfig.category_adventure}
+                        </button>
+                    </div>
+                    
+                    <!-- Stories Grid -->
+                    <div id="storiesGrid" class="mobile-grid tablet-grid desktop-grid" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 20px; margin-bottom: 30px;">
+                        ${renderStories()}
+                    </div>
+                    
+                    <!-- Footer with Couple Photos -->
+                    <footer style="margin-top: 50px; padding: 40px 20px; background: ${config.card_color || defaultConfig.card_color}; border-radius: 20px; text-align: center;">
+                        <div style="display: flex; justify-content: center; align-items: center; margin-bottom: 20px;">
+                            <div style="position: relative; width: 120px; height: 120px; border-radius: 50%; overflow: hidden; border: 4px solid ${config.accent_color || defaultConfig.accent_color}; box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3); margin-right: -15px; z-index: 2;">
+                                <img src="https://iili.io/fMEOjqb.jpg" alt="Rifki" style="width: 100%; height: 100%; object-fit: cover;">
+                            </div>
+                            <div style="position: relative; width: 120px; height: 120px; border-radius: 50%; overflow: hidden; border: 4px solid ${config.accent_color || defaultConfig.accent_color}; box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3); z-index: 1;">
+                                <img src="https://iili.io/fMEeqT7.jpg" alt="Rara" style="width: 100%; height: 100%; object-fit: cover;">
+                            </div>
+                        </div>
+                        <p style="color: ${config.text_color || defaultConfig.text_color}; font-size: ${(config.font_size || defaultConfig.font_size) * 1.1}px; font-family: ${config.font_family || defaultConfig.font_family}, Georgia, serif; margin-bottom: 10px; font-weight: 600;">
+                            Dibuat dengan ❤️
+                        </p>
+                        <p style="color: ${config.text_color || defaultConfig.text_color}; opacity: 0.7; font-size: ${(config.font_size || defaultConfig.font_size) * 0.9}px; font-family: ${config.font_family || defaultConfig.font_family}, Georgia, serif;">
+                            Untuk tidur yang lebih nyenyak dengan cerita-cerita indah 🌙📖
+                        </p>
+                        <p style="color: ${config.accent_color || defaultConfig.accent_color}; font-size: ${(config.font_size || defaultConfig.font_size) * 0.95}px; font-family: ${config.font_family || defaultConfig.font_family}, Georgia, serif; margin-top: 20px; font-weight: 600;">
+                            💑 Bersama Sejak 22 November 2025 💑
+                        </p>
+                        <div id="relationshipCounter" style="color: ${config.text_color || defaultConfig.text_color}; font-size: ${(config.font_size || defaultConfig.font_size) * 1.1}px; font-family: ${config.font_family || defaultConfig.font_family}, Georgia, serif; margin-top: 15px; font-weight: 600; background: linear-gradient(135deg, rgba(236, 72, 153, 0.2) 0%, rgba(139, 92, 246, 0.2) 100%); padding: 20px; border-radius: 15px; border: 2px solid ${config.accent_color || defaultConfig.accent_color};">
+                            <div style="font-size: ${(config.font_size || defaultConfig.font_size) * 1.3}px; margin-bottom: 10px;">⏰ Sudah Bersama Selama:</div>
+                            <div id="counterDisplay" style="font-size: ${(config.font_size || defaultConfig.font_size) * 1.5}px; color: ${config.accent_color || defaultConfig.accent_color}; font-weight: bold; text-shadow: 0 0 10px ${config.accent_color || defaultConfig.accent_color};">
+                                Menghitung...
+                            </div>
+                        </div>
+                        <p style="color: ${config.text_color || defaultConfig.text_color}; opacity: 0.5; font-size: ${(config.font_size || defaultConfig.font_size) * 0.8}px; font-family: ${config.font_family || defaultConfig.font_family}, Georgia, serif; margin-top: 10px;">
+                            © 2025 Rifki & Rara. All Rights Reserved.
+                        </p>
+                    </footer>
+                </div>
+                
+                <!-- Modal -->
+                <div id="storyModal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 1000;">
+                    <div class="modal-overlay" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.8);" onclick="closeModal()"></div>
+                    <div class="modal-content" style="position: relative; max-width: 800px; margin: 20px auto; background: ${config.card_color || defaultConfig.card_color}; border-radius: 20px; padding: 30px 20px; box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5); font-family: ${config.font_family || defaultConfig.font_family}, Georgia, serif; max-height: calc(100% - 40px);">
+                        <button class="close-btn" onclick="closeModal()" style="position: absolute; top: 15px; right: 15px; background: none; border: none; font-size: ${(config.font_size || defaultConfig.font_size) * 2}px; cursor: pointer; color: ${config.text_color || defaultConfig.text_color}; opacity: 0.6; padding: 0; line-height: 1; z-index: 10;" aria-label="Tutup cerita">
+                            ×
+                        </button>
+                        <div id="modalContent"></div>
+                    </div>
+                </div>
+            `;
+            
+            // Add event listeners
+            const categoryButtons = document.querySelectorAll('.category-btn');
+            categoryButtons.forEach(btn => {
+                btn.addEventListener('click', () => {
+                    const category = btn.getAttribute('data-category');
+                    filterStories(category);
+                });
+            });
+        }
+
+        function renderStories() {
+            const config = window.elementSdk ? window.elementSdk.config : defaultConfig;
+            const filteredStories = currentCategory === 'all' 
+                ? stories 
+                : stories.filter(s => s.category === currentCategory);
+            
+            return filteredStories.map(story => `
+                <div class="story-card" style="background: ${config.card_color || defaultConfig.card_color}; border-radius: 15px; padding: 25px; cursor: pointer; border: 2px solid transparent; font-family: ${config.font_family || defaultConfig.font_family}, Georgia, serif;" onclick="openStory(${story.id})">
+                    <div style="font-size: 48px; text-align: center; margin-bottom: 15px;">${story.emoji}</div>
+                    <h3 class="story-title" style="font-size: ${(config.font_size || defaultConfig.font_size) * 1.25}px; font-weight: bold; margin-bottom: 10px; color: ${config.text_color || defaultConfig.text_color};">${story.title}</h3>
+                    <p class="story-preview" style="font-size: ${(config.font_size || defaultConfig.font_size) * 0.9}px; color: ${config.text_color || defaultConfig.text_color}; opacity: 0.8; margin-bottom: 15px; line-height: 1.6;">${story.preview}</p>
+                    <div style="display: flex; justify-content: space-between; align-items: center;">
+                        <span class="story-duration" style="font-size: ${(config.font_size || defaultConfig.font_size) * 0.85}px; color: ${config.accent_color || defaultConfig.accent_color};">⏱️ ${story.duration}</span>
+                        <button class="read-btn" style="background: ${config.button_color || defaultConfig.button_color}; color: white; padding: 8px 20px; border-radius: 20px; border: none; cursor: pointer; font-size: ${(config.font_size || defaultConfig.font_size) * 0.9}px; font-family: ${config.font_family || defaultConfig.font_family}, Georgia, serif; font-weight: 600;">Baca</button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function filterStories(category) {
+            currentCategory = category;
+            const config = window.elementSdk ? window.elementSdk.config : defaultConfig;
+            
+            // Update active button
+            const buttons = document.querySelectorAll('.category-btn');
+            buttons.forEach(btn => {
+                const isActive = btn.getAttribute('data-category') === category;
+                btn.classList.toggle('active', isActive);
+                
+                if (isActive) {
+                    btn.style.backgroundColor = config.button_color || defaultConfig.button_color;
+                    btn.style.color = '#ffffff';
+                } else {
+                    btn.style.backgroundColor = config.card_color || defaultConfig.card_color;
+                    btn.style.color = config.text_color || defaultConfig.text_color;
+                }
+            });
+            
+            // Update stories
+            const storiesGrid = document.getElementById('storiesGrid');
+            storiesGrid.innerHTML = renderStories();
+        }
+
+        function openStory(storyId) {
+            const story = stories.find(s => s.id === storyId);
+            if (!story) return;
+            
+            currentStory = story;
+            const config = window.elementSdk ? window.elementSdk.config : defaultConfig;
+            const modal = document.getElementById('storyModal');
+            const modalContent = document.getElementById('modalContent');
+            
+            modalContent.innerHTML = `
+                <div style="text-align: center; margin-bottom: 20px; font-size: 64px;">${story.emoji}</div>
+                <h2 class="modal-title" style="font-size: ${(config.font_size || defaultConfig.font_size) * 1.75}px; font-weight: bold; margin-bottom: 15px; color: ${config.text_color || defaultConfig.text_color}; text-align: center; font-family: ${config.font_family || defaultConfig.font_family}, Georgia, serif;">${story.title}</h2>
+                <div style="text-align: center; margin-bottom: 30px; color: ${config.accent_color || defaultConfig.accent_color}; font-size: ${(config.font_size || defaultConfig.font_size) * 0.9}px; font-family: ${config.font_family || defaultConfig.font_family}, Georgia, serif;">⏱️ ${story.duration}</div>
+                <div class="story-content" style="color: ${config.text_color || defaultConfig.text_color}; font-size: ${config.font_size || defaultConfig.font_size}px; white-space: pre-line; line-height: 1.8; font-family: ${config.font_family || defaultConfig.font_family}, Georgia, serif;">${story.content}</div>
+            `;
+            
+            modal.style.display = 'block';
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeModal() {
+            const modal = document.getElementById('storyModal');
+            modal.style.display = 'none';
+            document.body.style.overflow = 'auto';
+            currentStory = null;
+        }
+
+        // Initialize element SDK
+        if (window.elementSdk) {
+            window.elementSdk.init({
+                defaultConfig: defaultConfig,
+                onConfigChange: onConfigChange,
+                mapToCapabilities: (config) => ({
+                    recolorables: [
+                        {
+                            get: () => config.background_color || defaultConfig.background_color,
+                            set: (value) => {
+                                config.background_color = value;
+                                window.elementSdk.setConfig({ background_color: value });
+                            }
+                        },
+                        {
+                            get: () => config.card_color || defaultConfig.card_color,
+                            set: (value) => {
+                                config.card_color = value;
+                                window.elementSdk.setConfig({ card_color: value });
+                            }
+                        },
+                        {
+                            get: () => config.text_color || defaultConfig.text_color,
+                            set: (value) => {
+                                config.text_color = value;
+                                window.elementSdk.setConfig({ text_color: value });
+                            }
+                        },
+                        {
+                            get: () => config.accent_color || defaultConfig.accent_color,
+                            set: (value) => {
+                                config.accent_color = value;
+                                window.elementSdk.setConfig({ accent_color: value });
+                            }
+                        },
+                        {
+                            get: () => config.button_color || defaultConfig.button_color,
+                            set: (value) => {
+                                config.button_color = value;
+                                window.elementSdk.setConfig({ button_color: value });
+                            }
+                        }
+                    ],
+                    borderables: [],
+                    fontEditable: {
+                        get: () => config.font_family || defaultConfig.font_family,
+                        set: (value) => {
+                            config.font_family = value;
+                            window.elementSdk.setConfig({ font_family: value });
+                        }
+                    },
+                    fontSizeable: {
+                        get: () => config.font_size || defaultConfig.font_size,
+                        set: (value) => {
+                            config.font_size = value;
+                            window.elementSdk.setConfig({ font_size: value });
+                        }
+                    }
+                }),
+                mapToEditPanelValues: (config) => new Map([
+                    ["app_title", config.app_title || defaultConfig.app_title],
+                    ["app_subtitle", config.app_subtitle || defaultConfig.app_subtitle],
+                    ["category_all", config.category_all || defaultConfig.category_all],
+                    ["category_animals", config.category_animals || defaultConfig.category_animals],
+                    ["category_fairy", config.category_fairy || defaultConfig.category_fairy],
+                    ["category_adventure", config.category_adventure || defaultConfig.category_adventure]
+                ])
+            });
+        }
+
+        // Hide loading screen
+        function hideLoadingScreen() {
+            const loadingScreen = document.getElementById('loadingScreen');
+            setTimeout(() => {
+                loadingScreen.classList.add('fade-out');
+                setTimeout(() => {
+                    loadingScreen.style.display = 'none';
+                }, 500);
+            }, 2000);
+        }
+
+        // Calculate relationship duration
+        function updateRelationshipCounter() {
+            const startDate = new Date('2025-11-22'); // Tanggal jadian: 22 November 2025
+            const now = new Date();
+            
+            // Calculate difference
+            let years = now.getFullYear() - startDate.getFullYear();
+            let months = now.getMonth() - startDate.getMonth();
+            let days = now.getDate() - startDate.getDate();
+            
+            // Adjust if days is negative
+            if (days < 0) {
+                months--;
+                const prevMonth = new Date(now.getFullYear(), now.getMonth(), 0);
+                days += prevMonth.getDate();
+            }
+            
+            // Adjust if months is negative
+            if (months < 0) {
+                years--;
+                months += 12;
+            }
+            
+            // Calculate total days
+            const totalDays = Math.floor((now - startDate) / (1000 * 60 * 60 * 24));
+            
+            // Build display string
+            let displayText = '';
+            
+            if (years > 0) {
+                displayText += `${years} Tahun `;
+            }
+            if (months > 0) {
+                displayText += `${months} Bulan `;
+            }
+            if (days > 0 || (years === 0 && months === 0)) {
+                displayText += `${days} Hari`;
+            }
+            
+            displayText = displayText.trim();
+            displayText += ` 💖`;
+            
+            // Add total days info
+            if (totalDays > 0) {
+                displayText += `<div style="font-size: 0.7em; margin-top: 10px; opacity: 0.8;">(${totalDays} hari bersama)</div>`;
+            }
+            
+            const counterDisplay = document.getElementById('counterDisplay');
+            if (counterDisplay) {
+                counterDisplay.innerHTML = displayText;
+            }
+        }
+
+        // Render app on load
+        renderApp();
+        hideLoadingScreen();
+        
+        // Update counter immediately and every hour
+        updateRelationshipCounter();
+        setInterval(updateRelationshipCounter, 3600000); // Update every hour
+        
+        // Make functions globally accessible
+        window.openStory = openStory;
+        window.closeModal = closeModal;
+        window.filterStories = filterStories;
+        
+        // PWA Service Worker Registration
+        if ('serviceWorker' in navigator) {
+            const swCode = `
+                const CACHE_NAME = 'dongeng-rifki-rara-v1';
+                const urlsToCache = ['/'];
+                
+                self.addEventListener('install', (event) => {
+                    event.waitUntil(
+                        caches.open(CACHE_NAME)
+                            .then((cache) => cache.addAll(urlsToCache))
+                    );
+                });
+                
+                self.addEventListener('fetch', (event) => {
+                    event.respondWith(
+                        caches.match(event.request)
+                            .then((response) => response || fetch(event.request))
+                    );
+                });
+            `;
+            
+            const blob = new Blob([swCode], { type: 'application/javascript' });
+            const swUrl = URL.createObjectURL(blob);
+            
+            navigator.serviceWorker.register(swUrl)
+                .then((registration) => {
+                    console.log('Service Worker registered');
+                })
+                .catch((error) => {
+                    console.log('Service Worker registration failed:', error);
+                });
+        }
+        
+        // PWA Manifest
+        const manifest = {
+            name: "Dongeng Pengantar Tidur",
+            short_name: "Dongeng Tidur",
+            description: "Kumpulan dongeng pengantar tidur yang menyenangkan",
+            start_url: "./",
+            display: "standalone",
+            background_color: "#0f172a",
+            theme_color: "#0f172a",
+            orientation: "portrait",
+            icons: [
+                {
+                    src: "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 192 192'><rect fill='%230f172a' width='192' height='192'/><text y='125' font-size='100' text-anchor='middle' x='96'>📚</text></svg>",
+                    sizes: "192x192",
+                    type: "image/svg+xml"
+                },
+                {
+                    src: "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'><rect fill='%230f172a' width='512' height='512'/><text y='350' font-size='280' text-anchor='middle' x='256'>📚</text></svg>",
+                    sizes: "512x512",
+                    type: "image/svg+xml"
+                }
+            ]
+        };
+        
+        const manifestBlob = new Blob([JSON.stringify(manifest)], { type: 'application/json' });
+        const manifestURL = URL.createObjectURL(manifestBlob);
+        const link = document.createElement('link');
+        link.rel = 'manifest';
+        link.href = manifestURL;
+        document.head.appendChild(link);
+        
+        // PWA Install Prompt
+        let deferredPrompt;
+        window.addEventListener('beforeinstallprompt', (e) => {
+            e.preventDefault();
+            deferredPrompt = e;
+            
+            // Show install button if not in standalone mode
+            if (!window.matchMedia('(display-mode: standalone)').matches) {
+                showInstallPrompt();
+            }
+        });
+        
+        function showInstallPrompt() {
+            const installBtn = document.createElement('button');
+            installBtn.innerHTML = '📚 Pasang Aplikasi';
+            installBtn.style.cssText = `
+                position: fixed;
+                bottom: 20px;
+                right: 20px;
+                background: linear-gradient(135deg, #ec4899 0%, #8b5cf6 100%);
+                color: white;
+                padding: 12px 24px;
+                border-radius: 25px;
+                border: none;
+                cursor: pointer;
+                font-size: 14px;
+                font-weight: 600;
+                box-shadow: 0 4px 15px rgba(236, 72, 153, 0.4);
+                z-index: 9999;
+                animation: bounce 2s infinite;
+            `;
+            
+            installBtn.addEventListener('click', async () => {
+                if (deferredPrompt) {
+                    deferredPrompt.prompt();
+                    const { outcome } = await deferredPrompt.userChoice;
+                    deferredPrompt = null;
+                    installBtn.remove();
+                }
+            });
+            
+            document.body.appendChild(installBtn);
+            
+            // Add bounce animation
+            const style = document.createElement('style');
+            style.textContent = `
+                @keyframes bounce {
+                    0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
+                    40% { transform: translateY(-10px); }
+                    60% { transform: translateY(-5px); }
+                }
+            `;
+            document.head.appendChild(style);
+        }
+    </script>
+ <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9b3d21c2c086fd06',t:'MTc2NjcxNTk3MS4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</html>
